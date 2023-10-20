@@ -1,6 +1,7 @@
 package com.authentication.controller;
 
 import com.authentication.dto.AuthRequestDTO;
+import com.authentication.dto.UserFlagDTO;
 import com.authentication.service.impl.JwtServiceImpl;
 import com.authentication.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,5 +37,10 @@ public class UserController {
         } else {
             throw new UsernameNotFoundException("invalid user");
         }
+    }
+
+    @PostMapping("/saveUserFlag")
+    public String saveUserFlag(@RequestBody UserFlagDTO userFlagDTO) {
+        return userService.saveUserFlag(userFlagDTO);
     }
 }
