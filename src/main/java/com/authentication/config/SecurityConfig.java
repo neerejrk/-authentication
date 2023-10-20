@@ -38,8 +38,7 @@ public class SecurityConfig {
         String[] allowedUrls = {"/user/newUser","/user/authenticate", "/swagger-ui.html", "/swagger-resources/**", "/swagger-ui/**", "/actuator/**"};
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req.requestMatchers(allowedUrls).permitAll()
-                        .requestMatchers("/user/**").authenticated()
-                )
+                        .requestMatchers("/user/**").authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class)
