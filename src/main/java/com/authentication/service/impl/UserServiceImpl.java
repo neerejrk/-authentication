@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
 
             userFlagList.add(UserFlag.builder()
                     .id(parseInt(id.orElseThrow()))
-                    .type(typeEnum.map(TypeEnum::getValue).orElseThrow())
+                    .type(typeEnum.map(TypeEnum::name).orElseThrow())
                     .value(value.orElseThrow()).build());
         });
         //userFlagRepository.saveAll(userFlagList);
