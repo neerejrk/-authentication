@@ -42,18 +42,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public String saveUserFlag(UserFlagDTO userFlagDTO) {
         Collection<UserFlag> userFlagList = new ArrayList<>();
-        Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(value -> {
-            String[] userFlag = value.split("[-:]");
-            String type = userFlag[1];
+        Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
+            String[] userFlag = flag.split("[-:]");
+            Optional<String> id = Optional.of(userFlag[0]);
+            Optional<String> type = Optional.of(userFlag[1]);
+            Optional<String> value = Optional.of(userFlag[2]);
+
             Optional<TypeEnum> typeEnum = Arrays.stream(TypeEnum.values())
-                    .filter(enumValue -> enumValue.getKey().equals(type))
+                    .filter(enumValue -> enumValue.getKey().equals(type.get()))
                     .findFirst();
+
             userFlagList.add(UserFlag.builder()
-                    .id(parseInt(userFlag[0]))
-                    .type(typeEnum.map(TypeEnum::getValue).orElse(null))
-                    .value(userFlag[2]).build());
+                    .id(parseInt(id.orElseThrow()))
+                    .type(typeEnum.map(TypeEnum::getValue).orElseThrow())
+                    .value(value.orElseThrow()).build());
         });
-        userFlagRepository.saveAll(userFlagList);
+        //userFlagRepository.saveAll(userFlagList);
         return "User Flag saved successfully";
     }
 
