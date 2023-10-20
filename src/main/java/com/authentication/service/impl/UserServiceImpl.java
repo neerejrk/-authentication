@@ -4,6 +4,7 @@ import com.authentication.dto.AuthRequestDTO;
 import com.authentication.dto.UserFlagDTO;
 import com.authentication.entity.UserFlag;
 import com.authentication.entity.UserInfo;
+import com.authentication.enums.TypeEnum;
 import com.authentication.repository.UserFlagRepository;
 import com.authentication.repository.UserInfoRepository;
 import com.authentication.service.UserService;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 
 import static java.lang.Integer.parseInt;
 
@@ -41,10 +43,14 @@ public class UserServiceImpl implements UserService {
     public String saveUserFlag(UserFlagDTO userFlagDTO) {
         Collection<UserFlag> userFlagList = new ArrayList<>();
         Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(value -> {
-            String[] userFlag = value.split("[-:]+");
+            String[] userFlag = value.split("[-:]");
+            String type = userFlag[1];
+            Optional<TypeEnum> typeEnum = Arrays.stream(TypeEnum.values())
+                    .filter(enumValue -> enumValue.getKey().equals(type))
+                    .findFirst();
             userFlagList.add(UserFlag.builder()
                     .id(parseInt(userFlag[0]))
-                    .type(userFlag[1])
+                    .type(typeEnum.map(TypeEnum::getValue).orElse(null))
                     .value(userFlag[2]).build());
         });
         userFlagRepository.saveAll(userFlagList);
