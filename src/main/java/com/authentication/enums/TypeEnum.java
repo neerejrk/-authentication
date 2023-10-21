@@ -1,5 +1,8 @@
 package com.authentication.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum TypeEnum {
     ROUTINE("R"),
     TESTCASE("TC"),
@@ -10,10 +13,6 @@ public enum TypeEnum {
 
     TypeEnum(String key) {
         this.key = key;
-    }
-
-    public String getKey() {
-        return key;
     }
 
 }
