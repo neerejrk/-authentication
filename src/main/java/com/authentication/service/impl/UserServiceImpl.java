@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String saveUserFlag(UserFlagDTO userFlagDTO) {
-        Collection<UserFlag> userFlagList = new ArrayList<>();
+        Map<Integer, UserFlag> userFlags = new HashMap<>();
         if (isNotEmpty(userFlagDTO.getUserFlags())) {
             Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
                 String[] userFlag = flag.split("[-:]");
@@ -53,13 +53,13 @@ public class UserServiceImpl implements UserService {
                         .map(TypeEnum::name).orElseThrow(NoSuchElementException::new);
                 String idValue = id.orElseThrow(NoSuchElementException::new);
 
-                userFlagList.add(UserFlag.builder()
+                userFlags.put(parseInt(idValue), UserFlag.builder()
                         .id(parseInt(idValue))
                         .type(typeEnumValue)
                         .value(value.orElseThrow(NoSuchElementException::new))
                         .build());
             });
-            userFlagRepository.saveAll(userFlagList);
+            userFlagRepository.saveAll(userFlags.values());
         }
         return "User Flag saved successfully";
     }
