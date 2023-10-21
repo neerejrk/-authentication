@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
                             break;
                     }
                 }
-                
+
                 String idValue = id.orElseThrow(NoSuchElementException::new);
                 TypeEnum typeEnum = TypeEnum.valueOf(type.orElseThrow(NoSuchElementException::new));
                 String userFlagValue = value.orElseThrow(NoSuchElementException::new);
@@ -74,6 +74,8 @@ public class UserServiceImpl implements UserService {
                         .build());
             });
             userFlagRepository.saveAll(userFlags.values());
+        } else {
+            throw new NoSuchElementException();
         }
         return "User Flag saved successfully";
     }
