@@ -47,15 +47,12 @@ public class UserServiceImpl implements UserService {
                 Optional<String> type = getValue(userFlag[1]);
                 Optional<String> value = getValue(userFlag[2]);
 
-                String typeEnumValue = Arrays.stream(TypeEnum.values())
-                        .filter(enumValue -> type.isPresent() && enumValue.getKey().equals(type.get()))
-                        .findFirst()
-                        .map(TypeEnum::name).orElseThrow(NoSuchElementException::new);
+                TypeEnum typeEnum = TypeEnum.valueOf(type.orElseThrow(NoSuchElementException::new));
                 String idValue = id.orElseThrow(NoSuchElementException::new);
 
                 userFlags.put(parseInt(idValue), UserFlag.builder()
                         .id(parseInt(idValue))
-                        .type(typeEnumValue)
+                        .type(typeEnum.getValue())
                         .value(value.orElseThrow(NoSuchElementException::new))
                         .build());
             });
@@ -66,10 +63,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserFlag getUserFlag(String id, String type) {
-        Optional<String> typeValue = Arrays.stream(TypeEnum.values()).filter(typeEnum -> type.equals(typeEnum.getKey()))
-                .findFirst()
-                .map(TypeEnum::name);
-        return userFlagRepository.findUserFlagByIdAndType(parseInt(id), typeValue.orElse(null));
+        TypeEnum typeEnum = TypeEnum.valueOf(type);
+        return userFlagRepository.findUserFlagByIdAndType(parseInt(id), typeEnum.getValue());
     }
 
     private Optional<String> getValue(String userFlag) {

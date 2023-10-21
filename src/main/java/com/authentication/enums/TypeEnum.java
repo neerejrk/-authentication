@@ -4,15 +4,15 @@ import lombok.Getter;
 
 @Getter
 public enum TypeEnum {
-    ROUTINE("R"),
-    TESTCASE("TC"),
-    TESTSTEP("TS"),
-    SEQUENCE("S");
+    R("ROUTINE"),
+    TC("TESTCASE"),
+    TS("TESTSTEP"),
+    S("SEQUENCE");
 
-    private final String key;
+    private final String value;
 
-    TypeEnum(String key) {
-        this.key = key;
+    TypeEnum(String value) {
+        this.value = value;
     }
 
 }
