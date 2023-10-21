@@ -65,8 +65,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserFlag> getUserFlag(String id, String type) {
-        return userFlagRepository.findByIdAndType(id, type);
+    public UserFlag getUserFlag(String id, String type) {
+        Optional<String> typeValue = Arrays.stream(TypeEnum.values()).filter(typeEnum -> type.equals(typeEnum.getKey()))
+                .findFirst()
+                .map(TypeEnum::name);
+        return userFlagRepository.findUserFlagByIdAndType(parseInt(id), typeValue.orElse(null));
     }
 
     private Optional<String> getValue(String userFlag) {

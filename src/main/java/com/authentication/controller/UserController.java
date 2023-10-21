@@ -12,8 +12,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -44,8 +42,8 @@ public class UserController {
         return userService.saveUserFlag(userFlagRequestDTO);
     }
 
-    @GetMapping("/getUserFlag")
-    public List<UserFlag> getUserFlag(@PathVariable("id") String id, @PathVariable("type") String type) {
+    @GetMapping("/getUserFlag/id/{id}/type/{type}")
+    public UserFlag getUserFlag(@PathVariable("id") String id, @PathVariable("type") String type) {
         return userService.getUserFlag(id, type);
     }
 }
