@@ -14,8 +14,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler(value = {NoSuchElementException.class})
     @ResponseBody
-    protected ResponseEntity<Object> handleConflict(NoSuchElementException ex) {
+    protected ResponseEntity<Object> handleNoSuchElementException(NoSuchElementException ex) {
         String bodyOfResponse = "One of fields id, type, value is missing";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyOfResponse);
     }
+
+   
 }
