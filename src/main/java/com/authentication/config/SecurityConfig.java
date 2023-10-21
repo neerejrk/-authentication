@@ -35,7 +35,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        String[] allowedUrls = {"/user/newUser","/user/authenticate", "/swagger-ui.html", "/swagger-resources/**", "/swagger-ui/**", "/actuator/**"};
+        String[] allowedUrls = {"/user/newUser",
+                "/user/authenticate",
+                "/swagger-ui.html",
+                "/swagger-resources/**",
+                "/swagger-ui/**",
+                "/actuator/**",
+                "/swagger-resources",
+                "/v2/api-docs",
+                "/v3/api-docs",
+                "/v3/api-docs/**"};
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req -> req.requestMatchers(allowedUrls).permitAll()
                         .requestMatchers("/user/**").authenticated())
