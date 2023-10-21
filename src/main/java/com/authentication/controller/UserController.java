@@ -4,7 +4,7 @@ import com.authentication.dto.AuthRequestDTO;
 import com.authentication.dto.UserFlagRequestDTO;
 import com.authentication.entity.UserFlag;
 import com.authentication.service.UserService;
-import com.authentication.service.impl.JwtServiceImpl;
+import com.authentication.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private JwtServiceImpl jwtServiceImpl;
+    private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -31,7 +31,7 @@ public class UserController {
     public String authenticateAndGetToken(@RequestBody AuthRequestDTO authRequest) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtServiceImpl.generateToken(authRequest.getUsername());
+            return jwtService.generateToken(authRequest.getUsername());
         } else {
             throw new UsernameNotFoundException("invalid user");
         }

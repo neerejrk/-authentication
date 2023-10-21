@@ -1,6 +1,6 @@
 package com.authentication.filter;
 
-import com.authentication.service.impl.JwtServiceImpl;
+import com.authentication.service.JwtService;
 import com.authentication.service.impl.UserInfoUserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Autowired
-    private JwtServiceImpl jwtServiceImpl;
+    private JwtService jwtService;
 
     @Autowired
     private UserInfoUserDetailsServiceImpl userDetailsService;
@@ -32,12 +32,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         String username = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtServiceImpl.extractUsername(token);
+            username = jwtService.extractUsername(token);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtServiceImpl.validateToken(token, userDetails)) {
+            if (jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
