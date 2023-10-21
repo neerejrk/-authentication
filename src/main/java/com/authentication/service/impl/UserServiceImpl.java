@@ -12,11 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.*;
 
+import static io.micrometer.common.util.StringUtils.isNotEmpty;
 import static java.lang.Integer.parseInt;
 
 @Component
@@ -42,22 +40,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public String saveUserFlag(UserFlagDTO userFlagDTO) {
         Collection<UserFlag> userFlagList = new ArrayList<>();
-        Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
-            String[] userFlag = flag.split("[-:]");
-            Optional<String> id = Optional.of(userFlag[0]);
-            Optional<String> type = Optional.of(userFlag[1]);
-            Optional<String> value = Optional.of(userFlag[2]);
+        if (isNotEmpty(userFlagDTO.getUserFlags())) {
+            Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
+                String[] userFlag = flag.split("[-:]");
+                Optional<String> id = !userFlag[0].isEmpty() ? Optional.of(userFlag[0]) : Optional.empty();
+                Optional<String> type = !userFlag[1].isEmpty() ? Optional.of(userFlag[1]) : Optional.empty();
+                Optional<String> value = !userFlag[2].isEmpty() ? Optional.of(userFlag[2]) : Optional.empty();
 
-            Optional<TypeEnum> typeEnum = Arrays.stream(TypeEnum.values())
-                    .filter(enumValue -> enumValue.getKey().equals(type.get()))
-                    .findFirst();
+                String typeEnumValue = Arrays.stream(TypeEnum.values())
+                        .filter(enumValue -> type.isPresent() && enumValue.getKey().equals(type.get()))
+                        .findFirst()
+                        .map(TypeEnum::name).orElseThrow(NoSuchElementException::new);
+                String idValue = id.orElseThrow(NoSuchElementException::new);
 
-            userFlagList.add(UserFlag.builder()
-                    .id(parseInt(id.orElseThrow()))
-                    .type(typeEnum.map(TypeEnum::name).orElseThrow())
-                    .value(value.orElseThrow()).build());
-        });
-        //userFlagRepository.saveAll(userFlagList);
+                userFlagList.add(UserFlag.builder()
+                        .id(parseInt(idValue))
+                        .type(typeEnumValue)
+                        .value(value.orElseThrow(NoSuchElementException::new))
+                        .build());
+            });
+            userFlagRepository.saveAll(userFlagList);
+        }
         return "User Flag saved successfully";
     }
 
