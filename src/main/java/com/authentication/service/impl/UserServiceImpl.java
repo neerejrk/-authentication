@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService {
         Optional<String> type;
         Optional<String> value;
         String[] userFlag;
+        String idValue;
 
         if (isNotEmpty(userFlagRequestDTO.getUserFlags())) {
             for (String flag : userFlagRequestDTO.getUserFlags().split(",")) {
@@ -70,7 +71,7 @@ public class UserServiceImpl implements UserService {
                     }
                 }
 
-                String idValue = id.orElseThrow(NoSuchElementException::new);
+                idValue = id.orElseThrow(NoSuchElementException::new);
 
                 userFlags.put(parseInt(idValue), UserFlag.builder()
                         .id(parseInt(idValue))
