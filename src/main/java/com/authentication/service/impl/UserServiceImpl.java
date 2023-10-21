@@ -43,17 +43,34 @@ public class UserServiceImpl implements UserService {
         if (isNotEmpty(userFlagRequestDTO.getUserFlags())) {
             Arrays.stream(userFlagRequestDTO.getUserFlags().split(",")).forEach(flag -> {
                 String[] userFlag = flag.split("[-:]");
-                Optional<String> id = getValue(userFlag[0]);
-                Optional<String> type = getValue(userFlag[1]);
-                Optional<String> value = getValue(userFlag[2]);
+                Optional<String> id = Optional.empty();
+                Optional<String> type = Optional.empty();
+                Optional<String> value = Optional.empty();
 
-                TypeEnum typeEnum = TypeEnum.valueOf(type.orElseThrow(NoSuchElementException::new));
+                for (int i = 0; i < userFlag.length; i++) {
+                    switch (i) {
+                        case 0:
+                            id = getValue(userFlag[i]);
+                            break;
+                        case 1:
+                            type = getValue(userFlag[i]);
+                            break;
+                        case 2:
+                            value = getValue(userFlag[i]);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
                 String idValue = id.orElseThrow(NoSuchElementException::new);
+                TypeEnum typeEnum = TypeEnum.valueOf(type.orElseThrow(NoSuchElementException::new));
+                String userFlagValue = value.orElseThrow(NoSuchElementException::new);
 
                 userFlags.put(parseInt(idValue), UserFlag.builder()
                         .id(parseInt(idValue))
                         .type(typeEnum.getValue())
-                        .value(value.orElseThrow(NoSuchElementException::new))
+                        .value(userFlagValue)
                         .build());
             });
             userFlagRepository.saveAll(userFlags.values());
