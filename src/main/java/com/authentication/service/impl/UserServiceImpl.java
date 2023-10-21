@@ -43,9 +43,9 @@ public class UserServiceImpl implements UserService {
         if (isNotEmpty(userFlagDTO.getUserFlags())) {
             Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
                 String[] userFlag = flag.split("[-:]");
-                Optional<String> id = !userFlag[0].isEmpty() ? Optional.of(userFlag[0]) : Optional.empty();
-                Optional<String> type = !userFlag[1].isEmpty() ? Optional.of(userFlag[1]) : Optional.empty();
-                Optional<String> value = !userFlag[2].isEmpty() ? Optional.of(userFlag[2]) : Optional.empty();
+                Optional<String> id = getValue(userFlag[0]);
+                Optional<String> type = getValue(userFlag[1]);
+                Optional<String> value = getValue(userFlag[2]);
 
                 String typeEnumValue = Arrays.stream(TypeEnum.values())
                         .filter(enumValue -> type.isPresent() && enumValue.getKey().equals(type.get()))
@@ -62,6 +62,10 @@ public class UserServiceImpl implements UserService {
             userFlagRepository.saveAll(userFlagList);
         }
         return "User Flag saved successfully";
+    }
+
+    private Optional<String> getValue(String userFlag) {
+        return !userFlag.isEmpty() ? Optional.of(userFlag) : Optional.empty();
     }
 
 }
