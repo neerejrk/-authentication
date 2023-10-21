@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Optional<String> getValue(String userFlag) {
-        return !userFlag.isEmpty() ? Optional.of(userFlag) : Optional.empty();
+        return !userFlag.isEmpty() && !"null".equalsIgnoreCase(userFlag) ? Optional.of(userFlag) : Optional.empty();
     }
 
 }
