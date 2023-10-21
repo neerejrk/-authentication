@@ -1,18 +1,18 @@
 package com.authentication.controller;
 
 import com.authentication.dto.AuthRequestDTO;
-import com.authentication.dto.UserFlagDTO;
-import com.authentication.service.impl.JwtServiceImpl;
+import com.authentication.dto.UserFlagRequestDTO;
+import com.authentication.entity.UserFlag;
 import com.authentication.service.UserService;
+import com.authentication.service.impl.JwtServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -40,7 +40,12 @@ public class UserController {
     }
 
     @PostMapping("/saveUserFlag")
-    public String saveUserFlag(@RequestBody UserFlagDTO userFlagDTO) {
-        return userService.saveUserFlag(userFlagDTO);
+    public String saveUserFlag(@RequestBody UserFlagRequestDTO userFlagRequestDTO) {
+        return userService.saveUserFlag(userFlagRequestDTO);
+    }
+
+    @GetMapping("/getUserFlag")
+    public List<UserFlag> getUserFlag(@PathVariable("id") String id, @PathVariable("type") String type) {
+        return userService.getUserFlag(id, type);
     }
 }

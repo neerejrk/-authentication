@@ -1,7 +1,7 @@
 package com.authentication.service.impl;
 
 import com.authentication.dto.AuthRequestDTO;
-import com.authentication.dto.UserFlagDTO;
+import com.authentication.dto.UserFlagRequestDTO;
 import com.authentication.entity.UserFlag;
 import com.authentication.entity.UserInfo;
 import com.authentication.enums.TypeEnum;
@@ -38,10 +38,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String saveUserFlag(UserFlagDTO userFlagDTO) {
+    public String saveUserFlag(UserFlagRequestDTO userFlagRequestDTO) {
         Map<Integer, UserFlag> userFlags = new HashMap<>();
-        if (isNotEmpty(userFlagDTO.getUserFlags())) {
-            Arrays.stream(userFlagDTO.getUserFlags().split(",")).forEach(flag -> {
+        if (isNotEmpty(userFlagRequestDTO.getUserFlags())) {
+            Arrays.stream(userFlagRequestDTO.getUserFlags().split(",")).forEach(flag -> {
                 String[] userFlag = flag.split("[-:]");
                 Optional<String> id = getValue(userFlag[0]);
                 Optional<String> type = getValue(userFlag[1]);
@@ -62,6 +62,11 @@ public class UserServiceImpl implements UserService {
             userFlagRepository.saveAll(userFlags.values());
         }
         return "User Flag saved successfully";
+    }
+
+    @Override
+    public List<UserFlag> getUserFlag(String id, String type) {
+        return userFlagRepository.findByIdAndType(id, type);
     }
 
     private Optional<String> getValue(String userFlag) {

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserFlagDTO {
+public class UserFlagRequestDTO {
     private String userFlags;
 }
